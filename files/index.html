@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Vertex Digital</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{--cream:#faf6ef;--ink:#1a1410;--rust:#c45c2e;--sage:#5a7a5c;--mist:#e8e2d9;--gold:#c9a84c;--soft:#f3ede4;}
+body{font-family:'DM Sans',sans-serif;background:var(--cream);color:var(--ink);overflow-x:hidden;}
+nav{position:fixed;top:0;left:0;right:0;z-index:200;display:flex;align-items:center;justify-content:space-between;padding:1.1rem 3rem;background:rgba(250,246,239,0.96);backdrop-filter:blur(10px);border-bottom:1px solid var(--mist);}
+.nav-logo{font-family:'Playfair Display',serif;font-size:1.35rem;font-weight:700;letter-spacing:-0.02em;color:var(--ink);cursor:pointer;display:flex;align-items:center;gap:0.5rem;}
+.nav-logo-dot{color:var(--rust);}
+.nav-logo-tag{font-size:0.68rem;font-weight:600;letter-spacing:0.18em;text-transform:uppercase;color:#9a8a7f;font-family:'DM Sans',sans-serif;opacity:0.8;}
+.nav-links{display:flex;gap:2rem;list-style:none;align-items:center;}
+.nav-links a{font-size:0.82rem;font-weight:500;letter-spacing:0.08em;text-transform:uppercase;color:var(--ink);text-decoration:none;opacity:0.5;transition:opacity 0.2s;cursor:pointer;}
+.nav-links a:hover,.nav-links a.active{opacity:1;}
+.nav-auth{display:flex;gap:0.75rem;}
+.btn-nav-ghost{background:none;border:1px solid var(--mist);padding:0.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;color:var(--ink);transition:border-color 0.2s;}
+.btn-nav-ghost:hover{border-color:var(--ink);}
+.btn-nav-solid{background:var(--ink);border:1px solid var(--ink);padding:0.5rem 1.2rem;font-family:'DM Sans',sans-serif;font-size:0.82rem;font-weight:500;cursor:pointer;color:var(--cream);transition:background 0.2s;}
+.btn-nav-solid:hover{background:var(--rust);border-color:var(--rust);}
+.page{display:block;visibility:hidden;opacity:0;height:0;overflow:hidden;padding-top:0;transition:opacity 0.35s ease;}
+.page.active{visibility:visible;opacity:1;height:auto;overflow:visible;padding-top:72px;min-height:100vh;}
+.hero{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 72px);}
+.hero-left{display:flex;flex-direction:column;justify-content:center;padding:5rem 4rem 5rem 5rem;}
+.hero-tag{font-size:0.73rem;font-weight:500;letter-spacing:0.16em;text-transform:uppercase;color:var(--rust);margin-bottom:1.5rem;}
+.hero-title{font-family:'Playfair Display',serif;font-size:clamp(2.6rem,4.5vw,4.2rem);line-height:1.08;font-weight:700;letter-spacing:-0.02em;margin-bottom:1.6rem;}
+.hero-title em{font-style:italic;color:var(--rust);}
+.hero-body{font-size:1rem;line-height:1.85;color:#4a3f35;max-width:400px;margin-bottom:2.5rem;}
+.btn-row{display:flex;gap:1rem;flex-wrap:wrap;}
+.btn-primary{background:var(--ink);color:var(--cream);border:none;padding:0.9rem 2rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:background 0.2s;}
+.btn-primary:hover{background:var(--rust);}
+.btn-ghost{background:none;border:1px solid var(--ink);padding:0.9rem 2rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:500;letter-spacing:0.04em;cursor:pointer;color:var(--ink);transition:all 0.2s;}
+.btn-ghost:hover{background:var(--mist);}
+.hero-right{background:var(--mist);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden;}
+.hero-art{width:320px;height:420px;position:relative;}
+.circle-big{position:absolute;width:280px;height:280px;border-radius:50%;background:var(--sage);opacity:0.18;top:20px;left:20px;animation:floatArt 6s ease-in-out infinite;}
+.circle-sm{position:absolute;width:140px;height:140px;border-radius:50%;background:var(--rust);opacity:0.22;bottom:60px;right:10px;animation:floatArt 8s ease-in-out infinite reverse;}
+.card-float{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:white;padding:2rem;width:200px;box-shadow:0 20px 60px rgba(0,0,0,0.1);text-align:center;animation:floatCard 5s ease-in-out infinite;}
+.card-float-emoji{font-size:2.4rem;margin-bottom:0.8rem;}
+.card-float-label{font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--ink);opacity:0.7;}
+@keyframes floatArt{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+@keyframes floatCard{0%,100%{transform:translate(-50%,-50%) translateY(0);}50%{transform:translate(-50%,-50%) translateY(-14px);}}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--mist);border-bottom:1px solid var(--mist);}
+.stat{padding:2.2rem 3rem;border-right:1px solid var(--mist);}
+.stat:last-child{border-right:none;}
+.stat-num{font-family:'Playfair Display',serif;font-size:2.4rem;font-weight:700;color:var(--rust);display:block;margin-bottom:0.25rem;}
+.stat-label{font-size:0.78rem;letter-spacing:0.1em;text-transform:uppercase;opacity:0.55;}
+.section{padding:5.5rem 5rem;}
+.section-heading{font-family:'Playfair Display',serif;font-size:2.1rem;font-weight:700;margin-bottom:0.5rem;letter-spacing:-0.01em;}
+.section-sub{font-size:0.92rem;color:#6b5d52;margin-bottom:2.8rem;}
+.services-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1.25rem;}
+.service-card{background:white;padding:2rem;border:1px solid var(--mist);transition:transform 0.25s,box-shadow 0.25s,border-color 0.2s;cursor:pointer;position:relative;}
+.service-card:hover{transform:translateY(-5px);box-shadow:0 16px 48px rgba(0,0,0,0.08);}
+.service-card.selected{border-color:var(--rust);box-shadow:0 0 0 2px var(--rust);}
+.service-icon{font-size:1.8rem;margin-bottom:0.9rem;}
+.service-name{font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;margin-bottom:0.5rem;}
+.service-desc{font-size:0.87rem;line-height:1.75;color:#5a4f45;}
+.service-check{position:absolute;top:1rem;right:1rem;width:22px;height:22px;border-radius:50%;background:var(--rust);display:none;align-items:center;justify-content:center;color:white;font-size:0.72rem;}
+.service-card.selected .service-check{display:flex;}
+.price-tag{margin-top:1rem;font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;color:var(--rust);display:none;}
+.logged-in .price-tag{display:block;}
+.order-bar{background:var(--ink);color:var(--cream);padding:1.5rem 5rem;display:none;align-items:center;justify-content:space-between;}
+.order-bar.visible{display:flex;}
+.order-bar-label{font-size:0.8rem;opacity:0.6;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:0.2rem;}
+.order-bar-service{font-family:'Playfair Display',serif;font-size:1.1rem;}
+.btn-white{background:white;color:var(--rust);border:none;padding:0.85rem 1.8rem;font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:600;cursor:pointer;transition:opacity 0.2s;}
+.btn-white:hover{opacity:0.88;}
+.testimonial-strip{background:var(--soft);padding:4rem 5rem;border-top:1px solid var(--mist);}
+.t-quote{font-family:'Playfair Display',serif;font-size:1.5rem;font-style:italic;line-height:1.55;color:var(--ink);max-width:700px;}
+.about-hero{background:var(--ink);color:var(--cream);padding:6rem 5rem;display:grid;grid-template-columns:1fr 1fr;gap:4rem;align-items:center;}
+.about-label{font-size:0.73rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1.2rem;}
+.about-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.8vw,3.2rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;}
+.about-title em{font-style:italic;color:var(--gold);}
+.about-right p{font-size:0.97rem;line-height:1.9;color:rgba(250,246,239,0.72);margin-bottom:1.1rem;}
+.timeline{padding:5rem;border-bottom:1px solid var(--mist);}
+.timeline-title{font-family:'Playfair Display',serif;font-size:1.7rem;font-weight:700;margin-bottom:2.5rem;}
+.timeline-item{display:grid;grid-template-columns:80px 1px 1fr;gap:0 2rem;padding-bottom:2.5rem;}
+.t-year{font-family:'Playfair Display',serif;font-size:1.2rem;font-weight:700;color:var(--rust);text-align:right;padding-top:2px;}
+.t-line{background:var(--mist);position:relative;}
+.t-dot{width:10px;height:10px;background:var(--rust);border-radius:50%;position:absolute;top:6px;left:50%;transform:translateX(-50%);}
+.t-heading{font-family:'Playfair Display',serif;font-size:1rem;font-weight:700;margin-bottom:0.35rem;}
+.t-body{font-size:0.87rem;line-height:1.7;color:#5a4f45;}
+.team-section{padding:5rem;}
+.team-row{display:flex;flex-wrap:wrap;gap:1.5rem;margin-top:2.5rem;}
+.team-card{text-align:center;width:140px;}
+.team-avatar{width:72px;height:72px;border-radius:50%;margin:0 auto 0.9rem;display:flex;align-items:center;justify-content:center;font-size:1.5rem;}
+.a1{background:#fde9df;}.a2{background:#dff0e2;}.a3{background:#dfe6f5;}.a4{background:#f7eedc;}.a6{background:#dff5f5;}
+.team-name{font-family:'Playfair Display',serif;font-size:0.95rem;font-weight:700;margin-bottom:0.2rem;}
+.team-role{font-size:0.75rem;color:#7a6a5f;letter-spacing:0.05em;line-height:1.5;}
+.contact-strip{background:var(--rust);color:white;padding:4rem 5rem;display:flex;align-items:center;justify-content:space-between;}
+.contact-strip h2{font-family:'Playfair Display',serif;font-size:1.9rem;font-weight:700;}
+.contact-strip p{margin-top:0.4rem;opacity:0.82;font-size:0.92rem;}
+.pricing-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem;margin-top:2rem;}
+.price-card{background:white;border:1px solid var(--mist);padding:2rem;}
+.price-card.highlight{background:var(--ink);border-color:var(--ink);position:relative;}
+.price-tier{font-size:0.72rem;letter-spacing:0.12em;text-transform:uppercase;color:var(--rust);margin-bottom:0.75rem;}
+.price-card.highlight .price-tier{color:var(--gold);}
+.price-amount{font-family:'Playfair Display',serif;font-size:2rem;font-weight:700;margin-bottom:0.25rem;}
+.price-card.highlight .price-amount{color:var(--cream);}
+.price-for{font-size:0.82rem;color:#6b5d52;margin-bottom:1.25rem;}
+.price-card.highlight .price-for{color:rgba(250,246,239,0.55);}
+.price-features{font-size:0.84rem;color:#5a4f45;line-height:1.9;}
+.price-card.highlight .price-features{color:rgba(250,246,239,0.7);}
+.popular-badge{position:absolute;top:-1px;left:50%;transform:translateX(-50%);background:var(--rust);color:white;font-size:0.68rem;font-weight:600;letter-spacing:0.1em;text-transform:uppercase;padding:0.22rem 0.9rem;}
+.auth-wrap{display:grid;grid-template-columns:1fr 1fr;min-height:calc(100vh - 72px);}
+.auth-left{background:var(--ink);color:var(--cream);display:flex;flex-direction:column;justify-content:center;padding:5rem;}
+.auth-left-tag{font-size:0.72rem;letter-spacing:0.16em;text-transform:uppercase;color:var(--gold);margin-bottom:1.5rem;}
+.auth-left-title{font-family:'Playfair Display',serif;font-size:clamp(2rem,3.5vw,3rem);font-weight:700;line-height:1.1;letter-spacing:-0.02em;margin-bottom:1.5rem;}
+.auth-left-title em{font-style:italic;color:var(--gold);}
+.auth-left-body{font-size:0.93rem;line-height:1.85;color:rgba(250,246,239,0.62);max-width:360px;}
+.auth-perks{margin-top:2.5rem;display:flex;flex-direction:column;gap:0.85rem;}
+.auth-perk{display:flex;align-items:center;gap:0.75rem;font-size:0.87rem;color:rgba(250,246,239,0.72);}
+.auth-perk::before{content:'✦';color:var(--gold);font-size:0.7rem;}
+.auth-right{background:var(--cream);display:flex;flex-direction:column;justify-content:center;align-items:center;padding:5rem;}
+.auth-form{width:100%;max-width:400px;}
+.auth-form-title{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;margin-bottom:0.4rem;}
+.auth-form-sub{font-size:0.88rem;color:#6b5d52;margin-bottom:2.2rem;}
+.auth-form-sub a{color:var(--rust);text-decoration:none;font-weight:500;cursor:pointer;}
+.form-group{margin-bottom:1.2rem;}
+.form-group label{display:block;font-size:0.76rem;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:#6b5d52;margin-bottom:0.45rem;}
+.form-group input,.form-group select{width:100%;background:white;border:1px solid var(--mist);padding:0.82rem 1rem;font-family:'DM Sans',sans-serif;font-size:0.93rem;color:var(--ink);outline:none;transition:border-color 0.2s;-webkit-appearance:none;}
+.form-group input:focus,.form-group select:focus{border-color:var(--rust);}
+.form-group input::placeholder{color:#b0a49a;}
+.form-error{font-size:0.8rem;color:var(--rust);margin-top:0.4rem;display:none;}
+.btn-auth{width:100%;background:var(--ink);color:var(--cream);border:none;padding:1rem;font-family:'DM Sans',sans-serif;font-size:0.92rem;font-weight:500;letter-spacing:0.04em;cursor:pointer;transition:background 0.2s;margin-top:0.5rem;}
+.btn-auth:hover{background:var(--rust);}
+.auth-note{font-size:0.77rem;color:#9a8a7f;text-align:center;margin-top:1.2rem;line-height:1.6;}
+.dashboard{padding:3rem 5rem;}
+.dash-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:2.5rem;padding-bottom:1.5rem;border-bottom:1px solid var(--mist);}
+.dash-welcome{font-family:'Playfair Display',serif;font-size:1.8rem;font-weight:700;letter-spacing:-0.01em;}
+.dash-welcome em{font-style:italic;color:var(--rust);}
+.dash-sub{font-size:0.88rem;color:#6b5d52;margin-top:0.3rem;}
+.dash-grid{display:grid;grid-template-columns:2fr 1fr;gap:2rem;}
+.dash-card{background:white;border:1px solid var(--mist);padding:2rem;margin-bottom:1.25rem;}
+.dash-card-title{font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;margin-bottom:1.25rem;padding-bottom:0.75rem;border-bottom:1px solid var(--mist);}
+.order-item{display:flex;align-items:center;justify-content:space-between;padding:0.85rem 0;border-bottom:1px solid var(--soft);}
+.order-item:last-child{border-bottom:none;}
+.order-service-name{font-size:0.92rem;font-weight:500;}
+.order-date{font-size:0.77rem;color:#9a8a7f;margin-top:0.15rem;}
+.order-right{display:flex;align-items:center;gap:0.75rem;}
+.order-status{font-size:0.72rem;letter-spacing:0.08em;text-transform:uppercase;background:var(--soft);padding:0.25rem 0.65rem;color:#5a4f45;}
+.order-price{font-family:'Playfair Display',serif;font-size:1rem;color:var(--rust);font-weight:700;}
+.btn-remove{background:none;border:none;cursor:pointer;color:#c0b0a8;font-size:0.9rem;padding:0.2rem 0.35rem;transition:color 0.2s;line-height:1;}
+.btn-remove:hover{color:var(--rust);}
+.dash-empty{font-size:0.88rem;color:#9a8a7f;font-style:italic;padding:0.5rem 0;}
+.profile-row{display:flex;justify-content:space-between;font-size:0.88rem;padding:0.55rem 0;border-bottom:1px solid var(--soft);}
+.profile-row:last-child{border-bottom:none;}
+.profile-label{color:#6b5d52;}
+.profile-val{font-weight:500;color:var(--ink);}
+.dash-mini-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:0.75rem;}
+.mini-service-card{background:var(--soft);border:1px solid var(--mist);padding:1.1rem;cursor:pointer;transition:all 0.2s;text-align:center;}
+.mini-service-card:hover{border-color:var(--rust);background:white;}
+.mini-icon{font-size:1.4rem;margin-bottom:0.4rem;}
+.mini-name{font-family:'Playfair Display',serif;font-size:0.85rem;font-weight:700;margin-bottom:0.2rem;}
+.mini-price{font-size:0.82rem;color:var(--rust);font-weight:600;}
+.modal-overlay{position:fixed;inset:0;background:rgba(26,20,16,0.5);z-index:500;display:none;align-items:center;justify-content:center;}
+.modal-overlay.open{display:flex;}
+.modal{background:var(--cream);padding:3rem;max-width:480px;width:90%;position:relative;}
+.modal-close{position:absolute;top:1rem;right:1.25rem;background:none;border:none;font-size:1.4rem;cursor:pointer;color:#9a8a7f;line-height:1;}
+.modal-title{font-family:'Playfair Display',serif;font-size:1.5rem;font-weight:700;margin-bottom:0.4rem;}
+.modal-sub{font-size:0.87rem;color:#6b5d52;margin-bottom:1.75rem;}
+.modal-btns{display:flex;gap:1rem;}
+.modal-btns button{flex:1;}
+.notif{position:fixed;bottom:2rem;right:2rem;background:var(--ink);color:var(--cream);padding:1rem 1.5rem;font-size:0.87rem;z-index:999;opacity:0;transform:translateY(8px);transition:all 0.3s;pointer-events:none;max-width:280px;line-height:1.5;}
+.notif.show{opacity:1;transform:translateY(0);}
+.notif strong{color:var(--gold);}
+@media(max-width:900px){
+  nav{padding:1rem 1.5rem;}
+  .nav-links{display:none;}
+  .hero,.auth-wrap,.about-hero{grid-template-columns:1fr;}
+  .hero-right,.auth-left{display:none;}
+  .hero-left,.auth-right{padding:3rem 1.5rem;}
+  .section,.dashboard,.timeline,.team-section{padding:3rem 1.5rem;}
+  .services-grid,.pricing-grid{grid-template-columns:1fr 1fr;}
+  .stats{grid-template-columns:1fr;}
+  .stat{border-right:none;border-bottom:1px solid var(--mist);}
+  .contact-strip{flex-direction:column;gap:1.5rem;padding:3rem 1.5rem;}
+  .dash-grid{grid-template-columns:1fr;}
+  .order-bar{padding:1.25rem 1.5rem;}
+}
+</style>
+</head>
+<body>
+<nav>
+  <div class="nav-logo" onclick="go('home')">
+    Vertex<span class="nav-logo-dot">.</span>
+    <span class="nav-logo-tag">a Digital Agency</span>
+  </div>
+  <ul class="nav-links">
+    <li><a id="nl-home" class="active" onclick="go('home');setActive('nl-home')">Home</a></li>
+    <li><a id="nl-about" onclick="go('about');setActive('nl-about')">About</a></li>
+    <li><a id="nl-services" onclick="go('services');setActive('nl-services')">Services</a></li>
+  </ul>
+  <div id="navAuth">
+    <div class="nav-auth">
+      <button class="btn-nav-ghost" onclick="go('login')">Log in</button>
+      <button class="btn-nav-solid" onclick="go('signup')">Sign up</button>
+    </div>
+  </div>
+</nav>
+
+<!-- HOME -->
+<div id="pg-home" class="page active">
+  <div class="hero">
+    <div class="hero-left">
+      <p class="hero-tag">Est. 2025 · Built for the digital hustle</p>
+      <h1 class="hero-title">Level up<br>your <em>digital</em><br>presence.</h1>
+      <p class="hero-body">We're a creative team doing gaming, study support, web design, thumbnails, content editing, and data analysis. Whatever you need — we've got it.</p>
+      <div class="btn-row">
+        <button class="btn-primary" onclick="go('services');setActive('nl-services')">Our Services →</button>
+        <button class="btn-ghost" onclick="go('signup')">Get started</button>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="hero-art">
+        <div class="circle-big"></div>
+        <div class="circle-sm"></div>
+        <div class="card-float"><div class="card-float-emoji">✦</div><div class="card-float-label">Vertex Digital</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><span class="stat-num">5</span><span class="stat-label">Team Members</span></div>
+    <div class="stat"><span class="stat-num">6</span><span class="stat-label">Core Services</span></div>
+    <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Support</span></div>
+  </div>
+  <div class="section">
+    <h2 class="section-heading">What we do</h2>
+    <p class="section-sub">Six services. One team. All digital.</p>
+    <div class="services-grid">
+      <div class="service-card" onclick="selectService(this,'Gaming','₹349')"><div class="service-check">✓</div><div class="service-icon">🎮</div><div class="service-name">Gaming</div><p class="service-desc">Coaching, community building, game strategy — level up and grow smarter.</p><div class="price-tag">₹349 / session</div></div>
+      <div class="service-card" onclick="selectService(this,'Study Support','₹349')"><div class="service-check">✓</div><div class="service-icon">📚</div><div class="service-name">Study Support</div><p class="service-desc">Assignments, presentations, research papers — polished and on time.</p><div class="price-tag">₹349 / task</div></div>
+      <div class="service-card" onclick="selectService(this,'Website Design','₹749')"><div class="service-check">✓</div><div class="service-icon">🌐</div><div class="service-name">Website Design</div><p class="service-desc">Clean, fast, beautiful websites — portfolios to full business sites.</p><div class="price-tag">From ₹749</div></div>
+      <div class="service-card" onclick="selectService(this,'Thumbnail Making','₹349')"><div class="service-check">✓</div><div class="service-icon">🖼️</div><div class="service-name">Thumbnail Making</div><p class="service-desc">High-CTR thumbnails for YouTube, Twitch, and social that make people click.</p><div class="price-tag">₹349 / 3 thumbs</div></div>
+      <div class="service-card" onclick="selectService(this,'Content Editing','₹749')"><div class="service-check">✓</div><div class="service-icon">🎬</div><div class="service-name">Content Editing</div><p class="service-desc">Reels, Shorts, YouTube edits — paced to keep viewers hooked till the end.</p><div class="price-tag">From ₹749</div></div>
+      <div class="service-card" onclick="selectService(this,'Data Analysis','₹749')"><div class="service-check">✓</div><div class="service-icon">📊</div><div class="service-name">Data Analysis</div><p class="service-desc">Raw numbers turned into clear visual insights for smarter decisions.</p><div class="price-tag">₹749 / report</div></div>
+    </div>
+  </div>
+  <div id="orderBar" class="order-bar">
+    <div><div class="order-bar-label">Selected service</div><div class="order-bar-service" id="orderBarName">—</div></div>
+    <div style="display:flex;gap:0.75rem;">
+      <button class="btn-white" onclick="handleOrder()">Place Order →</button>
+      <button class="btn-white" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);" onclick="cancelOrder()">Cancel</button>
+    </div>
+  </div>
+  <div class="testimonial-strip"><p class="t-quote">"Vertex turned our idea into a live site in 3 days. Genuinely impressed."</p></div>
+</div>
+
+<!-- ABOUT -->
+<div id="pg-about" class="page">
+  <div class="about-hero">
+    <div><p class="about-label">Our story</p><h1 class="about-title">Five people.<br><em>One team.</em></h1></div>
+    <div class="about-right">
+      <p>We started Vertex because we kept seeing people pay too much for basic digital work — or give up because they couldn't afford an agency.</p>
+      <p>Gaming, studying, building websites, editing clips, making thumbnails, crunching data — between us, we cover the whole stack. And we keep prices honest.</p>
+    </div>
+  </div>
+  <div class="timeline">
+    <h2 class="timeline-title">How we got here</h2>
+    <div class="timeline-item"><div class="t-year">2024</div><div class="t-line"><div class="t-dot"></div></div><div class="t-content"><div class="t-heading">The idea</div><p class="t-body">A group of friends in a Discord call realized they each had a different skill. Someone said — why not make this a thing?</p></div></div>
+    <div class="timeline-item"><div class="t-year">Early '25</div><div class="t-line"><div class="t-dot"></div></div><div class="t-content"><div class="t-heading">First clients</div><p class="t-body">Word spread fast. First website delivered. First thumbnails went live. First coaching session ran. People came back.</p></div></div>
+    <div class="timeline-item"><div class="t-year">Now</div><div class="t-line"><div class="t-dot"></div></div><div class="t-content"><div class="t-heading">Vertex Digital</div><p class="t-body">Six services, a real website, and a team that loves the work. Just getting started.</p></div></div>
+  </div>
+  <div class="team-section">
+    <h2 class="section-heading">The team</h2>
+    <p class="section-sub">Real people, real skills.</p>
+    <div class="team-row">
+      <div class="team-card"><div class="team-avatar a3">🎬</div><div class="team-name">Nilkanta</div><div class="team-role">Editor & Thumbnail Maker</div></div>
+      <div class="team-card"><div class="team-avatar a2">🌐</div><div class="team-name">Shreehan</div><div class="team-role">Website Creation & Gaming</div></div>
+      <div class="team-card"><div class="team-avatar a1">🌐</div><div class="team-name">Sayantan</div><div class="team-role">Website Creation</div></div>
+      <div class="team-card"><div class="team-avatar a4">🖼️</div><div class="team-name">Arka</div><div class="team-role">Thumbnail Maker & Gamer</div></div>
+      <div class="team-card"><div class="team-avatar a6">🎮</div><div class="team-name">Mayank</div><div class="team-role">Gamer & Data Scientist</div></div>
+    </div>
+  </div>
+  <div class="contact-strip">
+    <div><h2>Ready to work with us?</h2><p>Pick a service and let's get started.</p></div>
+    <button class="btn-white" onclick="go('services');setActive('nl-services')">See Services →</button>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<div id="pg-services" class="page">
+  <div class="section" style="padding-bottom:2rem;">
+    <h2 class="section-heading">Services & Pricing</h2>
+    <p class="section-sub">Sign in to see full pricing. Select a service to get started.</p>
+    <div class="services-grid">
+      <div class="service-card" onclick="selectService(this,'Gaming','₹349')"><div class="service-check">✓</div><div class="service-icon">🎮</div><div class="service-name">Gaming</div><p class="service-desc">Coaching, community management, game strategy sessions.</p><div class="price-tag">₹349 / session</div></div>
+      <div class="service-card" onclick="selectService(this,'Study Support','₹349')"><div class="service-check">✓</div><div class="service-icon">📚</div><div class="service-name">Study Support</div><p class="service-desc">Assignments, presentations, essays, research — done properly.</p><div class="price-tag">₹349 / task</div></div>
+      <div class="service-card" onclick="selectService(this,'Website Design','₹749')"><div class="service-check">✓</div><div class="service-icon">🌐</div><div class="service-name">Website Design</div><p class="service-desc">Landing pages · Business sites · Full web apps.</p><div class="price-tag">From ₹749</div></div>
+      <div class="service-card" onclick="selectService(this,'Thumbnail Making','₹349')"><div class="service-check">✓</div><div class="service-icon">🖼️</div><div class="service-name">Thumbnail Making</div><p class="service-desc">YouTube, Twitch, Instagram — high-CTR designs per batch.</p><div class="price-tag">₹349 / 3 thumbs</div></div>
+      <div class="service-card" onclick="selectService(this,'Content Editing','₹749')"><div class="service-check">✓</div><div class="service-icon">🎬</div><div class="service-name">Content Editing</div><p class="service-desc">Reels & Shorts · Full YouTube video · Series.</p><div class="price-tag">From ₹749</div></div>
+      <div class="service-card" onclick="selectService(this,'Data Analysis','₹749')"><div class="service-check">✓</div><div class="service-icon">📊</div><div class="service-name">Data Analysis</div><p class="service-desc">Reports, dashboards, visual insights from your raw data.</p><div class="price-tag">₹749 / report</div></div>
+    </div>
+  </div>
+  <div id="orderBar2" class="order-bar">
+    <div><div class="order-bar-label">Selected service</div><div class="order-bar-service" id="orderBarName2">—</div></div>
+    <div style="display:flex;gap:0.75rem;">
+      <button class="btn-white" onclick="handleOrder()">Place Order →</button>
+      <button class="btn-white" style="background:transparent;border:1px solid rgba(255,255,255,0.3);color:rgba(255,255,255,0.7);" onclick="cancelOrder()">Cancel</button>
+    </div>
+  </div>
+  <div class="section" style="background:var(--soft);padding-top:4rem;">
+    <h2 class="section-heading">Full Pricing</h2>
+    <p class="section-sub">Transparent. No surprises.</p>
+    <div class="pricing-grid">
+      <div class="price-card"><div class="price-tier">Starter</div><div class="price-amount">₹349</div><div class="price-for">Gaming · Study · Thumbnails</div><div class="price-features">✓ Fast delivery<br>✓ 1 revision<br>✓ Direct chat</div></div>
+      <div class="price-card"><div class="price-tier">Standard</div><div class="price-amount">₹749</div><div class="price-for">Web · Editing · Data</div><div class="price-features">✓ 3-day delivery<br>✓ 2 revisions<br>✓ Progress updates</div></div>
+      <div class="price-card highlight"><div class="popular-badge">Popular</div><div class="price-tier">Pro</div><div class="price-amount">₹1,549</div><div class="price-for">Full website or video series</div><div class="price-features">✓ Priority delivery<br>✓ Unlimited revisions<br>✓ Strategy call</div></div>
+      <div class="price-card"><div class="price-tier">Custom</div><div class="price-amount">₹2,999+</div><div class="price-for">Complex / ongoing projects</div><div class="price-features">✓ Custom scope<br>✓ Dedicated support<br>✓ Monthly retainer</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- LOGIN -->
+<div id="pg-login" class="page">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <p class="auth-left-tag">Welcome back</p>
+      <h1 class="auth-left-title">Good to see<br>you <em>again.</em></h1>
+      <p class="auth-left-body">Log in to see pricing, place orders, and track your projects.</p>
+      <div class="auth-perks">
+        <div class="auth-perk">See full pricing on all services</div>
+        <div class="auth-perk">Place and track your orders</div>
+        <div class="auth-perk">Direct contact with the team</div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form">
+        <h2 class="auth-form-title">Log in</h2>
+        <p class="auth-form-sub">No account? <a onclick="go('signup')">Sign up free →</a></p>
+        <div class="form-group"><label>Email address</label><input type="email" id="loginEmail" placeholder="you@example.com"/></div>
+        <div class="form-group"><label>Password</label><input type="password" id="loginPassword" placeholder="••••••••"/><div class="form-error" id="loginErr">Incorrect email or password.</div></div>
+        <button class="btn-auth" onclick="doLogin()">Log in →</button>
+        <p class="auth-note">Your details are stored securely.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- SIGNUP -->
+<div id="pg-signup" class="page">
+  <div class="auth-wrap">
+    <div class="auth-left">
+      <p class="auth-left-tag">Join Vertex</p>
+      <h1 class="auth-left-title">Start your<br><em>journey.</em></h1>
+      <p class="auth-left-body">Create an account to unlock pricing and place orders with the Vertex team.</p>
+      <div class="auth-perks">
+        <div class="auth-perk">Free to sign up — no card needed</div>
+        <div class="auth-perk">Unlock all service pricing instantly</div>
+        <div class="auth-perk">Order and track in one place</div>
+      </div>
+    </div>
+    <div class="auth-right">
+      <div class="auth-form">
+        <h2 class="auth-form-title">Create account</h2>
+        <p class="auth-form-sub">Already have one? <a onclick="go('login')">Log in →</a></p>
+        <div class="form-group"><label>Full name</label><input type="text" id="signupName" placeholder="Your name"/></div>
+        <div class="form-group"><label>Email address</label><input type="email" id="signupEmail" placeholder="you@example.com"/></div>
+        <div class="form-group"><label>Password</label><input type="password" id="signupPassword" placeholder="Min. 6 characters"/><div class="form-error" id="signupErr">Please fill all fields correctly.</div></div>
+        <div class="form-group"><label>Interested in</label>
+          <select id="signupService">
+            <option value="">Select a service...</option>
+            <option>Gaming</option><option>Study Support</option><option>Website Design</option>
+            <option>Thumbnail Making</option><option>Content Editing</option><option>Data Analysis</option>
+            <option>Multiple services</option>
+          </select>
+        </div>
+        <button class="btn-auth" onclick="doSignup()">Create account →</button>
+        <p class="auth-note">We'll reach out within 24 hours to get started on your project.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- DASHBOARD -->
+<div id="pg-dashboard" class="page">
+  <div class="dashboard">
+    <div class="dash-header">
+      <div><div class="dash-welcome">Welcome back, <em id="dashFirstName">—</em></div><div class="dash-sub">Here's your Vertex dashboard.</div></div>
+      <button class="btn-ghost" onclick="doLogout()">Log out</button>
+    </div>
+    <div class="dash-grid">
+      <div>
+        <div class="dash-card"><div class="dash-card-title">Your Orders</div><div id="dashOrders"><div class="dash-empty">No orders yet — pick a service below.</div></div></div>
+        <div class="dash-card">
+          <div class="dash-card-title">Place a New Order</div>
+          <div class="dash-mini-grid">
+            <div class="mini-service-card" onclick="placeOrder('Gaming','₹349')"><div class="mini-icon">🎮</div><div class="mini-name">Gaming</div><div class="mini-price">₹349</div></div>
+            <div class="mini-service-card" onclick="placeOrder('Study Support','₹349')"><div class="mini-icon">📚</div><div class="mini-name">Study</div><div class="mini-price">₹349</div></div>
+            <div class="mini-service-card" onclick="placeOrder('Website Design','₹749')"><div class="mini-icon">🌐</div><div class="mini-name">Website</div><div class="mini-price">₹749</div></div>
+            <div class="mini-service-card" onclick="placeOrder('Thumbnail Making','₹349')"><div class="mini-icon">🖼️</div><div class="mini-name">Thumbs</div><div class="mini-price">₹349</div></div>
+            <div class="mini-service-card" onclick="placeOrder('Content Editing','₹749')"><div class="mini-icon">🎬</div><div class="mini-name">Editing</div><div class="mini-price">₹749</div></div>
+            <div class="mini-service-card" onclick="placeOrder('Data Analysis','₹749')"><div class="mini-icon">📊</div><div class="mini-name">Data</div><div class="mini-price">₹749</div></div>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="dash-card"><div class="dash-card-title">Your Profile</div><div id="dashProfile"></div></div>
+        <div class="dash-card"><div class="dash-card-title">Contact Us</div><p style="font-size:0.87rem;color:#5a4f45;line-height:1.75;">Need help? Reach out on Discord or email us.</p><div style="margin-top:1rem;font-family:'Playfair Display',serif;color:var(--rust);font-size:0.95rem;">vertexdigital@gmail.com</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Login required -->
+<div class="modal-overlay" id="modal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">×</button>
+    <div class="modal-title">Sign in to continue</div>
+    <p class="modal-sub">You need an account to place an order and see full pricing.</p>
+    <div class="modal-btns">
+      <button class="btn-primary" onclick="closeModal();go('login')">Log in</button>
+      <button class="btn-ghost" onclick="closeModal();go('signup')">Sign up free</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Order Details -->
+<div class="modal-overlay" id="orderModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeOrderModal()">×</button>
+    <div class="modal-title">Complete your order</div>
+    <p class="modal-sub">We'll reach out on these details once your order is confirmed.</p>
+    <div style="background:var(--soft);padding:1rem 1.25rem;margin-bottom:1.5rem;border-left:3px solid var(--rust);">
+      <div style="font-size:0.75rem;text-transform:uppercase;letter-spacing:0.1em;color:#6b5d52;margin-bottom:0.2rem;">Service selected</div>
+      <div style="font-family:'Playfair Display',serif;font-size:1.1rem;font-weight:700;" id="orderModalService">—</div>
+    </div>
+    <div class="form-group"><label>Phone number</label><input type="tel" id="orderPhone" placeholder="+91 98765 43210"/><div class="form-error" id="orderErr">Please fill in both fields.</div></div>
+    <div class="form-group"><label>Email for confirmation</label><input type="email" id="orderEmail" placeholder="you@example.com"/></div>
+    <div style="display:flex;gap:0.75rem;margin-top:0.5rem;">
+      <button class="btn-auth" style="flex:2;" onclick="submitOrder()">Confirm Order →</button>
+      <button class="btn-ghost" style="flex:1;" onclick="closeOrderModal()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- MODAL: Order Success -->
+<div class="modal-overlay" id="successModal">
+  <div class="modal" style="text-align:center;padding:3.5rem;">
+    <div style="font-size:3rem;margin-bottom:1rem;">✦</div>
+    <div class="modal-title" style="margin-bottom:0.75rem;">Order Placed!</div>
+    <p style="font-size:0.95rem;color:#6b5d52;line-height:1.75;margin-bottom:0.5rem;">We've received your order for <strong id="successService">—</strong>.</p>
+    <p style="font-size:0.92rem;color:#6b5d52;margin-bottom:1rem;">We'll contact you on <strong id="successContact">—</strong> within 24 hours.</p>
+    <div style="background:var(--soft);border:1px solid var(--mist);padding:1.25rem;margin-bottom:1.75rem;">
+      <p style="font-family:'Playfair Display',serif;font-size:1rem;font-style:italic;color:var(--ink);margin-bottom:0.75rem;">"Our team will reach out to you shortly."</p>
+      <div style="display:flex;justify-content:center;gap:0.5rem;flex-wrap:wrap;">
+        <span style="font-size:0.78rem;background:white;border:1px solid var(--mist);padding:0.3rem 0.75rem;">🎬 Nilkanta</span>
+        <span style="font-size:0.78rem;background:white;border:1px solid var(--mist);padding:0.3rem 0.75rem;">🌐 Shreehan</span>
+        <span style="font-size:0.78rem;background:white;border:1px solid var(--mist);padding:0.3rem 0.75rem;">🌐 Sayantan</span>
+        <span style="font-size:0.78rem;background:white;border:1px solid var(--mist);padding:0.3rem 0.75rem;">🖼️ Arka</span>
+        <span style="font-size:0.78rem;background:white;border:1px solid var(--mist);padding:0.3rem 0.75rem;">🎮 Mayank</span>
+      </div>
+    </div>
+    <div style="font-size:0.82rem;color:#9a8a7f;">Redirecting to home in <strong id="countdown">60</strong> seconds...</div>
+  </div>
+</div>
+
+<!-- Admin link -->
+<div style="text-align:center;padding:1rem;background:var(--cream);border-top:1px solid var(--mist);">
+  <a href="admin.html" style="font-size:0.72rem;color:#c8c0b8;text-decoration:none;letter-spacing:0.08em;">Admin</a>
+</div>
+<div class="notif" id="notif"></div>
+
+<script>
+// ── SUPABASE CONFIG ──
+const SUPABASE_URL = 'https://kljozuqzwdxqspzortkb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_P9JuOLBgB_c5ItfNCPHwFg_Kx-EVPUK';
+
+async function sbInsert(table, data) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/${table}`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_KEY,
+        'Authorization': `Bearer ${SUPABASE_KEY}`,
+        'Prefer': 'return=minimal'
+      },
+      body: JSON.stringify(data)
+    });
+    return res.ok;
+  } catch(e) { console.error('Supabase insert error:', e); return false; }
+}
+
+// ── STATE ──
+let currentUser = null;
+let selectedService = null;
+let users  = JSON.parse(localStorage.getItem('vx_users')  || '[]');
+let orders = JSON.parse(localStorage.getItem('vx_orders') || '[]');
+
+// ── NAV ──
+function go(page) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('pg-' + page).classList.add('active');
+  window.scrollTo(0, 0);
+}
+function setActive(id) {
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ── SERVICE SELECT ──
+function selectService(el, name, price) {
+  el.classList.toggle('selected');
+  const allSelected = [...document.querySelectorAll('.service-card.selected')];
+  if (allSelected.length === 0) {
+    selectedService = null;
+    document.querySelectorAll('#orderBar,#orderBar2').forEach(b => b.classList.remove('visible'));
+    return;
+  }
+  const names = [...new Set(allSelected.map(c => c.querySelector('.service-name').textContent.trim()))];
+  selectedService = { name: names.join(', '), price };
+  document.querySelectorAll('#orderBar,#orderBar2').forEach(b => b.classList.add('visible'));
+  const label = names.length === 1 ? names[0] : names.length + ' services selected';
+  document.querySelectorAll('#orderBarName,#orderBarName2').forEach(s => s.textContent = label);
+}
+
+function handleOrder() {
+  if (!currentUser) { document.getElementById('modal').classList.add('open'); return; }
+  const allSelected = [...document.querySelectorAll('.service-card.selected')];
+  const names = [...new Set(allSelected.map(c => c.querySelector('.service-name').textContent.trim()))];
+  if (names.length > 0) selectedService = { name: names.join(', '), price: '' };
+  document.getElementById('orderModalService').textContent = selectedService ? selectedService.name : '—';
+  document.getElementById('orderEmail').value = currentUser.email || '';
+  document.getElementById('orderPhone').value = '';
+  document.getElementById('orderErr').style.display = 'none';
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function cancelOrder() {
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.order-bar').forEach(b => b.classList.remove('visible'));
+  selectedService = null;
+  go('home'); setActive('nl-home');
+}
+
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeOrderModal() { document.getElementById('orderModal').classList.remove('open'); }
+
+async function submitOrder() {
+  const phone = document.getElementById('orderPhone').value.trim();
+  const email = document.getElementById('orderEmail').value.trim();
+  const err   = document.getElementById('orderErr');
+  if (!phone || !email) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+
+  const order = {
+    id: Date.now(),
+    service: selectedService ? selectedService.name : '—',
+    price: selectedService ? selectedService.price : '—',
+    status: 'Pending',
+    user: currentUser.email,
+    phone, contactEmail: email,
+    placed: new Date().toLocaleDateString('en-IN')
+  };
+  orders.push(order);
+  localStorage.setItem('vx_orders', JSON.stringify(orders));
+
+  // Mirror to vx_order_log with the field shape admin.html reads
+  const orderLog = JSON.parse(localStorage.getItem('vx_order_log') || '[]');
+  orderLog.push({
+    userName:     currentUser.name,
+    contactEmail: email,
+    user:         currentUser.email,
+    phone:        phone,
+    service:      order.service,
+    status:       'Pending',
+    placed:       order.placed
+  });
+  localStorage.setItem('vx_order_log', JSON.stringify(orderLog));
+
+  // Save to Supabase
+  await sbInsert('orders', {
+    user_name: currentUser.name,
+    user_email: currentUser.email,
+    contact_email: email,
+    phone: phone,
+    service: order.service,
+    status: 'Pending',
+    placed: order.placed
+  });
+
+  closeOrderModal();
+  showSuccessModal(order.service, email);
+  renderOrders();
+}
+
+function showSuccessModal(service, contact) {
+  document.getElementById('successService').textContent = service;
+  document.getElementById('successContact').textContent = contact;
+  document.getElementById('successModal').classList.add('open');
+  let secs = 60;
+  document.getElementById('countdown').textContent = secs;
+  const timer = setInterval(() => {
+    secs--;
+    const el = document.getElementById('countdown');
+    if (el) el.textContent = secs;
+    if (secs <= 0) { clearInterval(timer); closeSuccessModal(); }
+  }, 1000);
+}
+
+function closeSuccessModal() {
+  document.getElementById('successModal').classList.remove('open');
+  document.querySelectorAll('.service-card').forEach(c => c.classList.remove('selected'));
+  document.querySelectorAll('.order-bar').forEach(b => b.classList.remove('visible'));
+  selectedService = null;
+  renderDashboard();
+  go('home'); setActive('nl-home');
+}
+
+// ── AUTH ──
+function hashPass(str) {
+  let hash = 0;
+  for (let i = 0; i < str.length; i++) { hash = ((hash << 5) - hash) + str.charCodeAt(i); hash |= 0; }
+  return Math.abs(hash).toString(36);
+}
+
+async function doLogin() {
+  const email = document.getElementById('loginEmail').value.trim();
+  const pass  = document.getElementById('loginPassword').value;
+  const err   = document.getElementById('loginErr');
+  err.style.display = 'none';
+
+  try {
+    const res  = await fetch(
+      `${SUPABASE_URL}/rest/v1/signups?email=eq.${encodeURIComponent(email)}&select=*`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const rows = await res.json();
+    if (rows.length && rows[0].password === hashPass(pass)) {
+      loginUser({ name: rows[0].name, email: rows[0].email, service: rows[0].service, joined: rows[0].joined });
+      return;
+    }
+  } catch(e) { console.error('Login error:', e); }
+
+  err.style.display = 'block';
+}
+
+async function doSignup() {
+  const name    = document.getElementById('signupName').value.trim();
+  const email   = document.getElementById('signupEmail').value.trim();
+  const pass    = document.getElementById('signupPassword').value;
+  const service = document.getElementById('signupService').value;
+  const err     = document.getElementById('signupErr');
+  if (!name || !email || pass.length < 6) { err.style.display = 'block'; return; }
+  err.style.display = 'none';
+
+  try {
+    const check    = await fetch(
+      `${SUPABASE_URL}/rest/v1/signups?email=eq.${encodeURIComponent(email)}&select=email`,
+      { headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` } }
+    );
+    const existing = await check.json();
+    if (existing.length) { err.textContent = 'Email already registered.'; err.style.display = 'block'; return; }
+  } catch(e) { console.error('Check error:', e); }
+
+  const joined = new Date().toLocaleDateString('en-IN', {day:'2-digit', month:'short', year:'numeric'});
+  const ok = await sbInsert('signups', { name, email, service, joined, password: hashPass(pass) });
+  if (!ok) { err.textContent = 'Something went wrong. Try again.'; err.style.display = 'block'; return; }
+
+  loginUser({ name, email, service, joined });
+}
+
+function loginUser(user) {
+  currentUser = user;
+  document.body.classList.add('logged-in');
+  updateNav(); renderDashboard();
+  go('dashboard');
+  notify('Welcome, <strong>' + user.name.split(' ')[0] + '</strong> 👋');
+}
+
+function doLogout() {
+  currentUser = null;
+  document.body.classList.remove('logged-in');
+  updateNav(); go('home'); setActive('nl-home');
+  notify('Logged out.');
+}
+
+function updateNav() {
+  const el = document.getElementById('navAuth');
+  if (currentUser) {
+    el.innerHTML = '<div class="nav-auth"><span style="font-size:0.83rem;opacity:0.6;padding:0.5rem 0;">' + currentUser.name + '</span><button class="btn-nav-solid" onclick="go(\'dashboard\')">Dashboard</button></div>';
+  } else {
+    el.innerHTML = '<div class="nav-auth"><button class="btn-nav-ghost" onclick="go(\'login\')">Log in</button><button class="btn-nav-solid" onclick="go(\'signup\')">Sign up</button></div>';
+  }
+}
+
+// ── DASHBOARD ──
+function renderDashboard() {
+  if (!currentUser) return;
+  document.getElementById('dashFirstName').textContent = currentUser.name.split(' ')[0];
+  document.getElementById('dashProfile').innerHTML =
+    '<div class="profile-row"><span class="profile-label">Name</span><span class="profile-val">' + currentUser.name + '</span></div>' +
+    '<div class="profile-row"><span class="profile-label">Email</span><span class="profile-val">' + currentUser.email + '</span></div>' +
+    '<div class="profile-row"><span class="profile-label">Member since</span><span class="profile-val">' + currentUser.joined + '</span></div>' +
+    '<div class="profile-row"><span class="profile-label">Interested in</span><span class="profile-val">' + (currentUser.service || '—') + '</span></div>';
+  renderOrders();
+}
+
+function placeOrder(service, price) {
+  selectedService = { name: service, price };
+  document.getElementById('orderModalService').textContent = service + ' — ' + price;
+  document.getElementById('orderEmail').value = currentUser.email || '';
+  document.getElementById('orderPhone').value = '';
+  document.getElementById('orderErr').style.display = 'none';
+  document.getElementById('orderModal').classList.add('open');
+}
+
+function removeOrder(id) {
+  orders = orders.filter(o => o.id !== id);
+  localStorage.setItem('vx_orders', JSON.stringify(orders));
+  renderOrders(); notify('Order removed.');
+}
+
+function renderOrders() {
+  const mine = orders.filter(o => o.user === currentUser.email);
+  const el = document.getElementById('dashOrders');
+  if (!mine.length) { el.innerHTML = '<div class="dash-empty">No orders yet — pick a service below.</div>'; return; }
+  el.innerHTML = mine.map(o =>
+    '<div class="order-item"><div><div class="order-service-name">' + o.service + '</div><div class="order-date">' + o.placed + '</div></div>' +
+    '<div class="order-right"><span class="order-status">' + o.status + '</span><span class="order-price">' + o.price + '</span><button class="btn-remove" onclick="removeOrder(' + o.id + ')">✕</button></div></div>'
+  ).join('');
+}
+
+function notify(msg) {
+  const el = document.getElementById('notif');
+  el.innerHTML = msg; el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 3200);
+}
+</script>
+</body>
+</html>
